@@ -14,7 +14,9 @@ app.use(bodyParser.urlencoded({ extended: false })) //son middlewares son funcio
     // parse application/json
 app.use(bodyParser.json())
 
-app.use(require('./routes/usuario.js'))
+//configuracion global de rutas
+app.use(require('./routes/index'))
+
 
 //conexion a mongodb
 mongoose.set('useCreateIndex', true); //en caso de que de en consola (node:17304) DeprecationWarning: collection.ensureIndex is deprecated. Use createIndexes instead. hacer esto

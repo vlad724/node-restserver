@@ -1,10 +1,12 @@
 const express = require('express');
-const Usuario = require('../models/usuario.js')
+const Usuario = require('../models/usuario.js');
+const { verificarToken, verificaAdmin_Role } = require('../middlewares/autenticacion.js');
 const app = express();
 const bcrypt = require('bcrypt');
 const _ = require('underscore');
 
-app.get('/usuario', function(req, res) {
+app.get('/usuario', verificarToken, (req, res) => {
+
 
     let desde = req.query.desde || 0;
     desde = Number(desde);
@@ -34,7 +36,7 @@ app.get('/usuario', function(req, res) {
         })
 
 })
-app.post('/usuario', function(req, res) {
+app.post('/usuario', [verificarToken, verificaAdmin_Role], function(req, res) {
     let body = req.body;
     let usuario = new Usuario({
         nombre: body.nombre,
@@ -57,7 +59,7 @@ app.post('/usuario', function(req, res) {
         }) //guardar valores en bd
 })
 
-app.put('/usuario/:id', function(req, res) {
+app.put('/usuario/:id', [verificarToken, verificaAdmin_Role], function(req, res) {
 
     let id = req.params.id;
     let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado']); //metodo de undercores para filtrar datos de salidas
@@ -79,7 +81,7 @@ app.put('/usuario/:id', function(req, res) {
         }) //metodo de actualizacion, en findByIdAndUpdate hay un objeto que tiene dos atributos new que es para que muestre valor actual y runValidators para que ejecute validaciones de actualizacion
 })
 
-app.delete('/usuario/:id', function(req, res) {
+app.delete('/usuario/:id', [verificarToken, verificaAdmin_Role], function(req, res) {
     let id = req.params.id;
     let cambioEstado = {
         estado: false
