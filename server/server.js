@@ -3,7 +3,7 @@ const express = require('express');
 /* import de mongodb */
 const mongoose = require('mongoose');
 
-
+const path = require('path');
 
 const app = express();
 const bodyParser = require('body-parser');
@@ -17,6 +17,8 @@ app.use(bodyParser.json())
 //configuracion global de rutas
 app.use(require('./routes/index'))
 
+//habilitar la carpeta public
+app.use(express.static(path.resolve(__dirname, '../public')));
 
 //conexion a mongodb
 mongoose.set('useCreateIndex', true); //en caso de que de en consola (node:17304) DeprecationWarning: collection.ensureIndex is deprecated. Use createIndexes instead. hacer esto
